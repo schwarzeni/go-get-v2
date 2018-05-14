@@ -1,0 +1,8 @@
+{
+  "data":[
+    {"apiUrl": "https://bangumi.bilibili.com/player/web_api/v2/playurl?cid=38186379&appkey=84956560bc028eb7&otype=json&type=&quality=112&module=bangumi&season_type=1&qn=112&sign=51787de7bb89d7b987aadfe37e927b89",
+    "webpageUrl": "https://www.bilibili.com/bangumi/play/ep200026",
+    "savePath": "全金属狂潮第四季/4"}
+  ],
+  "cookie": "fts=1484746909; pgv_pvi=8435259392; rpdid=kwqpiwqkmidopqpqwwqww; LIVE_BUVID=7a611b03affc066b072ec16870385593; LIVE_BUVID__ckMd5=47c1548bc8cb37f9; articleEntryIcon=1; biliMzIsnew=1; biliMzTs=0; uTZ=-480; _ga=GA1.2.1029853136.1497395844; im_seqno_21884414=22; balh_remove_pre_ad=; balh_flv_prefer_ws=; im_local_unread_21884414=0; im_notify_type_21884414=0; balh_mode=default; balh_server=https://www.biliplus.com; user_face=https%3A%2F%2Fi0.hdslb.com%2Fbfs%2Fface%2F8cbec5dc7d9e8addcbeb24cedea9e0689e749b8b.jpg; sid=4h1ggln3; UM_distinctid=162125eb8f02e8-09aba1cb430ae5-32667b04-13c680-162125eb8f121e; buvid3=38E0A6F7-B500-42DB-A66B-35FEE2C57A8719357infoc; DedeUserID=21884414; DedeUserID__ckMd5=e9da8aaa0c29c340; SESSDATA=9dbf4a04%2C1526947497%2C27e83b27; bili_jct=46837cc478c5e12374f77502bfbfd6c0; BANGUMI_SS_1598_REC=29285; BANGUMI_SS_21680_REC=183816; finger=14bc3c4e; CURRENT_QUALITY=112; BANGUMI_SS_4032_REC=88320; _dfcaptcha=e092e33060c706ca01a6c7ff089c2e40; BANGUMI_SS_23852_REC=200026"
+}
