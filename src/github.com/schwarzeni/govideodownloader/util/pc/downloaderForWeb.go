@@ -15,6 +15,8 @@ import (
 
 	"path"
 
+	"strings"
+
 	"github.com/schwarzeni/govideodownloader/model"
 	"github.com/schwarzeni/govideodownloader/util"
 )
@@ -82,7 +84,9 @@ func DownloadForWeb(videoInfo model.Video, dirpath string) {
 
 			// TODO：提取函数
 			u, _ := url.Parse(downloadUrl)
-			host := "https://" + u.Host
+			// TODO: edit host here
+			//host := "https://" + u.Host
+			host := "upos-hz-mirrorcos.acgvideo.com"
 			i := strconv.Itoa(idx)
 			paths := path.Join(dirpath, i+".flv")
 
@@ -137,4 +141,6 @@ func DownloadSingleVedioForWeb(currentVedioUrl string, header map[string]string,
 
 func httpToHttpsStr(u *url.URL) {
 	u.Scheme = "https"
+	// TODO: 插件
+	u.RawQuery = strings.Replace(u.RawQuery, "platform=iphone", "platform=pc", -1)
 }
