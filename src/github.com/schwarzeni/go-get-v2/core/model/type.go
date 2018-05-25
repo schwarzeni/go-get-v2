@@ -1,5 +1,3 @@
-package core
-
-type FetchVideoFinish int
+package model
 
 type GetRequestFromPool int
