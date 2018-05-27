@@ -1,0 +1,11 @@
+{
+  "data":[
+    {"apiUrl": "http://pl-ali.youku.com/playlist/m3u8?vid=XMzYxMjczMTYzMg%3D%3D&type=hd2&ups_client_netip=75884278&utid=f2IGEZj3THECAXAXopYYD3CK&ccode=0502&psid=71b76c3365e45b52e25faf67b5b82f2b&duration=1462&expire=18000&drm_type=1&drm_device=7&ups_ts=1527340386&onOff=0&encr=0&ups_key=665b3cfcf329196860dfdea74008464b",
+      "webpageUrl": "http://v.youku.com/v_show/id_XMzYxMjczMTYzMg.html?spm=a2h0j.11185381.listitem_page1.5!18~A",
+      "savePath": "BEATLESS-没有心跳的少女/15"},
+    {"apiUrl": "http://pl-ali.youku.com/playlist/m3u8?vid=XMzU4MDU5MDI0NA%3D%3D&type=hd2&ups_client_netip=75884278&utid=f2IGEZj3THECAXAXopYYD3CK&ccode=0502&psid=d438b3b170f81b72744536f291a57f46&duration=1467&expire=18000&drm_type=1&drm_device=7&ups_ts=1527340483&onOff=0&encr=0&ups_key=fcae0ed0d61b0674e1d58380169e2e9a",
+      "webpageUrl": "http://v.youku.com/v_show/id_XMzU4MDU5MDI0NA.html?spm=a2h0j.11185381.listitem_page1.5!16~A",
+      "savePath": "BEATLESS-没有心跳的少女/14"}
+  ],
+  "cookie": ""
+}

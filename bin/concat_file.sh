@@ -14,5 +14,7 @@ ffmpeg -f concat -i ff.txt -c copy ${filename}.mp4
 
 rm ff.txt
 rm *.flv
+rm *.ts
+rm *.f4v
 cd -
 done
