@@ -85,8 +85,8 @@ func DownloadForWeb(videoInfo model.Video, dirpath string) {
 			// TODO：提取函数
 			u, _ := url.Parse(downloadUrl)
 			// TODO: edit host here
-			host := "https://" + u.Host
-			//host := "upos-hz-mirrorcos.acgvideo.com"
+			//host := "https://" + u.Host
+			host := "upos-hz-mirrorcos.acgvideo.com"
 			i := strconv.Itoa(idx)
 			paths := path.Join(dirpath, i+".flv")
 

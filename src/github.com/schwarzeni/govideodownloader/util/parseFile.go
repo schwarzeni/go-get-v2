@@ -12,7 +12,7 @@ import (
 )
 
 func ParseConfigFile() model.Config {
-	file, e := ioutil.ReadFile("./data.json")
+	file, e := ioutil.ReadFile("./config/data.json")
 	if e != nil {
 		log.Fatal(e)
 		os.Exit(1)

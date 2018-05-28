@@ -1,11 +1,17 @@
 {
   "data":[
-    {"apiUrl": "https://bangumi.bilibili.com/player/web_api/v2/playurl?cid=19695814&appkey=84956560bc028eb7&otype=json&type=&quality=15&module=bangumi&season_type=1&qn=15&sign=6c269efba0b3942d808651d25745ee8a",
-      "webpageUrl": "https://www.bilibili.com/bangumi/play/ep13551",
-      "savePath": "TariTari/1"},
-    {"apiUrl": "https://bangumi.bilibili.com/player/web_api/v2/playurl?cid=19695821&appkey=84956560bc028eb7&otype=json&type=&quality=15&module=bangumi&season_type=1&qn=15&sign=3851cb2cdbedbe5cc3e4f4a0205bf282",
-      "webpageUrl": "https://www.bilibili.com/bangumi/play/ep13550",
-      "savePath": "TariTari/2"}
+    {"apiUrl": "https://apd-a8a70d21f022f3222cb3e647184bab81.v.smtcdns.com/moviets.tc.qq.com/AJTsACa1oKUrfMg5y7Cqn_SPcoWZoDHlFhs4yBPL6_uA/4rXwF8p9czmyV6s9R4_j4q_sOwHqEVDGqWDhWnGuIIhK1rozXRuqBmhQr_Nn25ifAo-mta9CYf8ooGHQBwCW3kXVWlqSo-7lRcQUnWTXKwuRYUe1u5lZYnDKJXeKLAyns8R8R0YEb1GfC5mUTx8GmDgAnN9kRq_1/i0026tithen.321003.ts.m3u8?ver=4",
+      "webpageUrl": "https://v.qq.com/x/cover/1egcxh1l6d8jyt1.html",
+      "savePath": "xbsj/1"},
+    {"apiUrl": "https://apd-1e592f9ee7fab1a1cf1e31b08f1fa38b.v.smtcdns.com/moviets.tc.qq.com/AVC9SR9z-BQL5w9eIw10KzZ2K5JPEGkmjxu3tCgPhdWg/lWBmYO6w8AeGG5oNFcfLe4UDA6Ef8zmIK_yBWy3NM7-YGe7ONO7aLJq3V9jru7eMMeIaNqAZipRJ7CY6I7N1f8GFEiwaR1_5SYhrCCu-a495Uw1iFneXjerq7te-1hCDEpD3cvrUUBjywRhLzHzVTWfFGqNEyn8B/v0026kugnjg.321003.ts.m3u8?ver=4",
+      "webpageUrl": "https://v.qq.com/x/cover/1egcxh1l6d8jyt1/v0026kugnjg.html",
+      "savePath": "xbsj/2"},
+    {"apiUrl": "https://apd-de8eaf3250bbdfe06851e06eff1ebca0.v.smtcdns.com/moviets.tc.qq.com/ATg_082QviryTF-SHQkLc0rIAVpjtm9DPmL9Ohlx1xLo/NyhaLErqMKyeY3-I1S61w_yemUqPbbLEdVZd3SpmB0XUfHz6jbkA76ubuBRLVq16rm5_X3Wu0ldczr2qUMFWFv2FezpXCMw_uLag_OYTS9OnGBZ0XgyFoW8Nk2G5m6laRHr7fhE3Cyo2mtiqPTqcDM9I3WmF4rgi/s0026w7r00b.321003.ts.m3u8?ver=4",
+      "webpageUrl": "https://v.qq.com/x/cover/1egcxh1l6d8jyt1/s0026w7r00b.html",
+      "savePath": "xbsj/3"},
+    {"apiUrl": "https://apd-5f8924d58746e049c49487c69231c3de.v.smtcdns.com/moviets.tc.qq.com/AoYiResobSiKzShQtaoqKde5M0-bIxWrfOiV4Tz5psiI/F5XbXmc6XPqZRPmj64-y1hN1tMPuEHhi2CdDc0RIPS9RIFTkKBg7bBynpOeofX5h51wQAXkbYBQ0wCvJ7Vtl6Ej_QtwGN_HXe7a1lyLfLDs_iTdbaFlCUyTUdq0_ARMiUb87Za_mxd55iMX64w70hJ_fF8xg01f3/i0026pfdu31.321003.ts.m3u8?ver=4",
+      "webpageUrl": "https://v.qq.com/x/cover/1egcxh1l6d8jyt1/i0026pfdu31.html",
+      "savePath": "xbsj/4"}
   ],
-  "cookie": "fts=1484746909; pgv_pvi=8435259392; rpdid=kwqpiwqkmidopqpqwwqww; LIVE_BUVID=7a611b03affc066b072ec16870385593; LIVE_BUVID__ckMd5=47c1548bc8cb37f9; articleEntryIcon=1; biliMzIsnew=1; biliMzTs=0; uTZ=-480; _ga=GA1.2.1029853136.1497395844; im_seqno_21884414=22; balh_remove_pre_ad=; balh_flv_prefer_ws=; im_local_unread_21884414=0; im_notify_type_21884414=0; balh_mode=default; balh_server=https://www.biliplus.com; sid=4h1ggln3; UM_distinctid=162125eb8f02e8-09aba1cb430ae5-32667b04-13c680-162125eb8f121e; buvid3=38E0A6F7-B500-42DB-A66B-35FEE2C57A8719357infoc; finger=14bc3c4e; BANGUMI_SS_23852_REC=200027; DedeUserID=21884414; DedeUserID__ckMd5=e9da8aaa0c29c340; BANGUMI_SS_417_REC=7875; SESSDATA=9dbf4a04%2C1529661297%2Cda1100d3; bili_jct=72132b58453d6ea240174525d14f4106; CURRENT_QUALITY=112; BANGUMI_SS_23870_REC=199980; user_face=https%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F8cbec5dc7d9e8addcbeb24cedea9e0689e749b8b.jpg; BANGUMI_SS_21680_REC=183817; BANGUMI_SS_23880_REC=199945; _dfcaptcha=7059fd4773d4380f81c121129ab133a1; BANGUMI_SS_752_REC=13551"
+  "cookie": ""
 }

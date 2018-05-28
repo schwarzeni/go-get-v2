@@ -10,6 +10,17 @@ import (
 
 	"sync"
 
+	"net/http"
+
+	"io"
+	"io/ioutil"
+
+	"bufio"
+	"os/user"
+	"path"
+
+	"encoding/json"
+
 	"github.com/schwarzeni/go-get-v2/parser/model"
 )
 
@@ -58,7 +69,6 @@ func ConcatFiles(pathLists []string) {
 
 // 检测一些环境配置
 func CheckEnv() {
-
 	// 检测环境是否有支持bash
 	LogP("Check if bash is available ...")
 	cmd := exec.Command("bash", "--version")
@@ -88,7 +98,80 @@ func CheckEnv() {
 	} else {
 		LogP("OK")
 	}
+}
 
+// 发送http请求
+func MethodGet(url string, headers map[string]string) (*http.Response, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range headers {
+		req.Header.Set(k, v)
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+// 将http请求返回的body的内容转为字符串
+func ResponseBodyToString(body io.ReadCloser) (string, error) {
+	bodyBytes, err2 := ioutil.ReadAll(body)
+	if err2 != nil {
+		return "", err2
+	}
+	return string(bodyBytes), nil
+}
+
+// 处理用户输入的保存路径，并将其转化为绝对路径
+func CheckAndParseSaveFilePath(config model.Config) model.Config {
+	usr, err := user.Current()
+	if err != nil {
+		LogFatal(err)
+	}
+	// ~/Desktop/temp
+	// aaa/22
+	for idx, _ := range config.Data {
+		// 如果是相对路径则进行拼接
+		if string([]rune(config.Data[idx].SavePath)[0]) == "~" {
+			config.Data[idx].SavePath = path.Join(usr.HomeDir, string([]rune(config.Data[idx].SavePath)[1:]))
+		}
+	}
+	LogP("Is the following path right? Input enter to continue, input other to quit program and edit config file")
+	for _, data := range config.Data {
+		LogP(data.SavePath)
+	}
+	scanner := bufio.NewScanner(os.Stdin)
+	isRight := false
+	for scanner.Scan() {
+		if scanner.Text() == "" {
+			isRight = true
+		}
+		break
+	}
+
+	if isRight == false {
+		LogP("Tips: Save path example: ~/Desktop/video1/01 or /Users/nizhenyang/Desktop/video1/01")
+		os.Exit(1)
+	}
+	return config
+}
+
+// 解析配置文件
+func ParseConfigFile() model.Config {
+	file, e := ioutil.ReadFile("./config/data.json")
+	if e != nil {
+		LogFatal("in util.ParseConfigFile" + e.Error())
+	}
+	var jsontype model.Config
+	json.Unmarshal(file, &jsontype)
+	// 检查同时修改路径
+	jsontype = CheckAndParseSaveFilePath(jsontype)
+	return jsontype
 }
 
 func LogP(v interface{}) {

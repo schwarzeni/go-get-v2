@@ -38,7 +38,7 @@ func (b BilibiliVideo) Download() (*http.Response, error) {
 		"Accept-Language": "en,zh-CN;q=0.9,zh;q=0.8,zh-TW;q=0.7",
 		"User-Agent":      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"}
 
-	return MethodGet(b.Url, headers)
+	return util.MethodGet(b.Url, headers)
 }
 
 func (b BilibiliVideo) GetSavePath() string {
