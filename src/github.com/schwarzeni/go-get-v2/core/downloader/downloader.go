@@ -8,6 +8,8 @@ import (
 	"os"
 	"path"
 
+	"time"
+
 	"github.com/schwarzeni/go-get-v2/core/model"
 	parserModel "github.com/schwarzeni/go-get-v2/parser/model"
 	"github.com/schwarzeni/go-get-v2/util"
@@ -17,11 +19,12 @@ func Downloadfunc(sendRequestSignal chan model.GetRequestFromPool, chanToDownloa
 	finishOneWork := make(chan int)
 	workerCount := 0
 	isFinish := false
+
+	start := time.Now()
 	// TODO just test
 	jobcount := 0
 	var worker parserModel.Video = nil
 	for {
-
 		// TODO 添加阻塞模块，防止程序莫名其妙挂掉 否则运行到2min30s作用就不会进行下载了
 		if workerCount == maxWorkerNumber || isFinish == true {
 			<-finishOneWork
@@ -56,7 +59,7 @@ func Downloadfunc(sendRequestSignal chan model.GetRequestFromPool, chanToDownloa
 			// TODO plause a little time for count to more accurate
 			util.SleepAtRandomTime()
 			// TODO log here
-			util.LogP(fmt.Sprintf("analyse %d", jobcount))
+			util.LogP(fmt.Sprintf("analyse finish %d works, use %s", jobcount, time.Since(start)))
 			return
 		}
 	}
