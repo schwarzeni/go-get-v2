@@ -2,8 +2,6 @@ package iqiyi
 
 import (
 	"net/url"
-	"strconv"
-	"time"
 )
 
 // 资源链接请求
@@ -41,7 +39,6 @@ func (i *IqiyiVideoUrlQuest) SelfConstruct() {
 	q.Add("qyid", i.FromUrl.Query().Get("k_uid"))
 	q.Add("qypid", i.FromUrl.Query().Get("tvid")+"_"+i.FromUrl.Query().Get("src"))
 	q.Add("qypid", i.FromUrl.Query().Get("tvid")+"_"+i.FromUrl.Query().Get("src"))
-	q.Add("rn", strconv.Itoa(int(time.Now().Unix())))
 	q.Add("pv", "0.1")
 	i.Url.RawQuery = q.Encode()
 }

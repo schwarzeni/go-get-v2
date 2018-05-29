@@ -39,7 +39,6 @@ func (i IqiyiParser) GetVideoListAndSavePath() ([]model.Video, []string) {
 		savePaths = append(savePaths, data.SavePath)
 	}
 	iqiyiVideoUrlQuests := i.GenerateDownloadQuestUrl(config)
-
 	// 获取视频真实地址
 	num := len(iqiyiVideoUrlQuests)
 	var wg sync.WaitGroup
@@ -47,26 +46,13 @@ func (i IqiyiParser) GetVideoListAndSavePath() ([]model.Video, []string) {
 	for idx, quest := range iqiyiVideoUrlQuests {
 		go func(idx int, videos *[]model.Video, quest IqiyiVideoUrlQuest, wg *sync.WaitGroup) {
 			quest.SelfConstruct()
-			resp, err := util.MethodGet(quest.Url.String(), quest.GenerateHttpRequestHeader())
-			if err != nil {
-				util.LogFatal("in IqiyiParser.GetVideoListAndSavePath get read video url " + quest.Url.String() + " " + err.Error())
-			}
-			defer resp.Body.Close()
-			content, err := util.ResponseBodyToString(resp.Body)
-			if err != nil {
-				util.LogFatal("n IqiyiParser.GetVideoListAndSavePath convert response.body to string " + err.Error())
-			}
-			var jsonBodyRawResult map[string]*json.RawMessage
-			json.Unmarshal([]byte(content), &jsonBodyRawResult)
-			realurl := string(*jsonBodyRawResult["l"])
-			realurl = strings.Trim(realurl, `""`)
 			*videos = append(*videos, IqiyiVideo{
 				Refer:    quest.Referer,
 				Origin:   quest.Origin,
 				Host:     quest.Host,
 				Cookie:   config.Cookie,
-				Url:      realurl,
-				SavePath: path.Join(quest.SavePath, strconv.Itoa(idx)+".f4v")})
+				Url:      quest.Url.String(),
+				SavePath: quest.SavePath})
 			wg.Done()
 		}(idx, &videos, quest, &wg)
 	}
@@ -104,7 +90,7 @@ func (i IqiyiParser) GenerateDownloadQuestUrl(config model.Config) []IqiyiVideoU
 			}
 			bodyString := string(bodyBytes)
 			strs := i.parseJsonFromJsFile(bodyString, ul)
-			for _, s := range strs {
+			for idxs, s := range strs {
 				tu, e := url.Parse(s)
 				if e != nil {
 					util.LogFatal("in IqiyiParser.GenerateDownloadQuestUrl parse url " + s + " " + e.Error())
@@ -113,7 +99,7 @@ func (i IqiyiParser) GenerateDownloadQuestUrl(config model.Config) []IqiyiVideoU
 					Referer:  dataCenter,
 					FromUrl:  ul,
 					Url:      tu,
-					SavePath: config.Data[idx].SavePath})
+					SavePath: path.Join(config.Data[idx].SavePath, strconv.Itoa(idxs)+".f4v")})
 			}
 			wg.Done()
 		}(idx, config, &iqiyiVideoUrlQuests, &wg)
