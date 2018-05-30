@@ -25,6 +25,9 @@ type EngineInfo struct {
 }
 
 func GenerateEngineAndRun() {
+	// 检测环境配置
+	util.CheckEnv()
+
 	info := generateEngineInfo()
 	run(info.maxWorkerNum, info.Parser)
 }
@@ -88,9 +91,6 @@ func generateEngineInfo() EngineInfo {
 
 // 启动Engine
 func run(total int, yourParser parserModel.Parser) {
-
-	// 检测环境配置
-	util.CheckEnv()
 
 	sendRequestSignal := make(chan model.GetRequestFromPool)
 	chanToDownload := make(chan parserModel.Video)
