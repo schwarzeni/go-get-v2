@@ -30,6 +30,70 @@ func (IqiyiParser) BuildParser() model.Parser {
 	return IqiyiParser{IsVip: false}
 }
 
+func (i IqiyiParser) GetVideoListAndSavePathForChrome(videoInfo model.SingleVideoInJson) ([]model.Video, string) {
+	var videos []model.Video
+	iqiyiVideoUrlQuests := i.GenerateDownloadQuestUrlForChrome(videoInfo)
+	// 获取视频真实地址
+	num := len(iqiyiVideoUrlQuests)
+	var wg sync.WaitGroup
+	wg.Add(num)
+	for idx, quest := range iqiyiVideoUrlQuests {
+		go func(idx int, videos *[]model.Video, quest IqiyiVideoUrlQuest, wg *sync.WaitGroup) {
+			quest.SelfConstruct()
+			*videos = append(*videos, IqiyiVideo{
+				Refer:    quest.Referer,
+				Origin:   quest.Origin,
+				Host:     quest.Host,
+				Cookie:   videoInfo.Cookie,
+				Url:      quest.Url.String(),
+				SavePath: quest.SavePath})
+			wg.Done()
+		}(idx, &videos, quest, &wg)
+	}
+	wg.Wait()
+	return videos, videoInfo.SavePath
+}
+
+func (i IqiyiParser) GenerateDownloadQuestUrlForChrome(videoInfo model.SingleVideoInJson) []IqiyiVideoUrlQuest {
+	var iqiyiVideoUrlQuests []IqiyiVideoUrlQuest
+	ul, e := url.Parse(videoInfo.ApiUrl)
+	if e != nil {
+		util.LogFatal("in IqiyiParser.GenerateDownloadQuestUrlForChrome parse url " + ul.String() + " " + e.Error())
+	}
+	resp, err := util.MethodGet(ul.String(), map[string]string{
+		"Cookie":        videoInfo.Cookie,
+		"Host":          ul.Host,
+		"Refer":         videoInfo.WebpageUrl,
+		"User-Agen":     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36",
+		"Cache-Control": "no-cache",
+		"Connection":    "keep-alive",
+		"Pragma":        "no-cache"})
+	if err != nil {
+		util.LogFatal("in IqiyiParser.GenerateDownloadQuestUrlForChrome fetch url " + ul.String() + " " + err.Error())
+	}
+	defer resp.Body.Close()
+	bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+	if err2 != nil {
+		util.LogFatal("in IqiyiParser.GenerateDownloadQuestUrlForChrome read response " + ul.String() + " " + err.Error())
+	}
+	bodyString := string(bodyBytes)
+	strs := i.parseJsonFromJsFile(bodyString, ul)
+	for idxs, s := range strs {
+		tu, e := url.Parse(s)
+		if e != nil {
+			util.LogFatal("in IqiyiParser.GenerateDownloadQuestUrlForChrome parse url " + s + " " + e.Error())
+		}
+		iqiyiVideoUrlQuests = append(iqiyiVideoUrlQuests, IqiyiVideoUrlQuest{
+			Referer:  dataCenter,
+			FromUrl:  ul,
+			Url:      tu,
+			SavePath: path.Join(videoInfo.SavePath, strconv.Itoa(idxs)+".f4v")})
+	}
+	return iqiyiVideoUrlQuests
+}
+
+////////////////////// 以下为原方法 ///////////////////////////
+
 // 获取视频列表
 func (i IqiyiParser) GetVideoListAndSavePath() ([]model.Video, []string) {
 	config := util.ParseConfigFile()

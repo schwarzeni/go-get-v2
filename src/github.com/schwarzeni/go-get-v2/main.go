@@ -1,9 +1,9 @@
 package main
 
-import (
-	"github.com/schwarzeni/go-get-v2/core/engine"
-)
+import "github.com/schwarzeni/go-get-v2/core/engine"
 
 func main() {
-	engine.GenerateEngineAndRun()
+	//engine.GenerateEngineAndRun()
+	engine.RunForChrome()
+
 }

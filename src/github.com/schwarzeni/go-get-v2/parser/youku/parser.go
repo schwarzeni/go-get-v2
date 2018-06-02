@@ -24,6 +24,46 @@ func (y YouKuParser) BuildParser() model.Parser {
 	return YouKuParser{}
 }
 
+func (y YouKuParser) GetVideoListAndSavePathForChrome(videoInfo model.SingleVideoInJson) ([]model.Video, string) {
+	var videos []model.Video
+	apiu, _ := url.Parse(videoInfo.ApiUrl)
+	pageu, _ := url.Parse(videoInfo.WebpageUrl)
+	strs, e := y.ParsePlayFrameTxt(videoInfo.ApiUrl,
+		map[string]string{
+			"Cookie":     videoInfo.Cookie,
+			"Connection": "keep-alive",
+			"Host":       apiu.Host,
+			"Origin":     pageu.Scheme + "://" + pageu.Host,
+			"Referer":    pageu.String(),
+			"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"})
+	if e != nil {
+		util.LogFatal("some error in parse api list: " + e.Error())
+	}
+	vs := y.GenerateVideoModelsForChrome(strs, videoInfo)
+	videos = append(videos, vs...)
+	return videos, videoInfo.SavePath
+}
+
+func (y YouKuParser) GenerateVideoModelsForChrome(urls []string, videoInfo model.SingleVideoInJson) []model.Video {
+	var videos []model.Video
+	for i, vu := range urls {
+		u, e := url.Parse(vu)
+		if e != nil {
+			util.LogFatal("Error: in YouKuParser.GenerateVideoModelsForChrome: " + e.Error())
+		}
+		videos = append(videos, YoukuVideo{
+			Url:      u.String(),
+			Origin:   "http://v.youku.com",
+			Host:     u.Host,
+			Refer:    videoInfo.WebpageUrl,
+			Cookie:   videoInfo.Cookie,
+			SavePath: path.Join(videoInfo.SavePath, strconv.Itoa(i)+".ts")})
+	}
+	return videos
+}
+
+////////////////////// 以下为原方法 ///////////////////////////
+
 func (y YouKuParser) GetVideoListAndSavePath() ([]model.Video, []string) {
 	info := util.ParseConfigFile()
 	num := len(info.Data)
@@ -54,7 +94,6 @@ func (y YouKuParser) GetVideoListAndSavePath() ([]model.Video, []string) {
 		}(info, &videos, &pathLists, &wg, i)
 	}
 	wg.Wait()
-
 	return videos, pathLists
 }
 

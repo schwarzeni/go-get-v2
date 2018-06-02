@@ -53,7 +53,7 @@ func ConcatFiles(pathLists []string) {
 	for i := 0; i < num; i++ {
 		go func(dirpath string, wg *sync.WaitGroup) {
 			LogP("Concating files in dir " + dirpath + " ...")
-			cmd := exec.Command("bash", "concat_file.sh", dirpath)
+			cmd := exec.Command("concat_file.sh", dirpath)
 			err := cmd.Run()
 			if err != nil {
 				LogE("When concating dir: " + dirpath + ", " + err.Error())
@@ -90,14 +90,14 @@ func CheckEnv() {
 	}
 
 	// 检测concat_file.sh 文件是否存在
-	LogP("Check if has concat_file.sh ...")
-	cmd = exec.Command("ls", "concat_file.sh")
-	err = cmd.Run()
-	if err != nil {
-		LogFatal("Fatal error: " + err.Error() + "\n>> Tips: Please check if there is concat_file.sh exists")
-	} else {
-		LogP("OK")
-	}
+	//LogP("Check if has concat_file.sh ...")
+	//cmd = exec.Command("ls", "concat_file.sh")
+	//err = cmd.Run()
+	//if err != nil {
+	//	LogFatal("Fatal error: " + err.Error() + "\n>> Tips: Please check if there is concat_file.sh exists")
+	//} else {
+	//	LogP("OK")
+	//}
 }
 
 // 发送http请求

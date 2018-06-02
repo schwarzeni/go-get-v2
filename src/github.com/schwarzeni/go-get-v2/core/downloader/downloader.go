@@ -10,12 +10,14 @@ import (
 
 	"time"
 
+	"path/filepath"
+
 	"github.com/schwarzeni/go-get-v2/core/model"
 	parserModel "github.com/schwarzeni/go-get-v2/parser/model"
 	"github.com/schwarzeni/go-get-v2/util"
 )
 
-func Downloadfunc(sendRequestSignal chan model.GetRequestFromPool, chanToDownload chan parserModel.Video, maxWorkerNumber int, finishSingle chan int) {
+func Downloadfunc(sendRequestSignal chan model.GetRequestFromPool, chanToDownload chan parserModel.Video, maxWorkerNumber int, finishSingle chan int, watchSpeedTaskFinishSignal model.SpeedWatchTaskFinishSignal) {
 	finishOneWork := make(chan int)
 	workerCount := 0
 	isFinish := false
@@ -56,6 +58,8 @@ func Downloadfunc(sendRequestSignal chan model.GetRequestFromPool, chanToDownloa
 			}
 			// 请求池中已无请求同时已经没有goroutine在工作
 		} else if workerCount == 0 && isFinish == true {
+			// 结束监控数据速度的任务
+			watchSpeedTaskFinishSignal <- 1
 			// TODO plause a little time for count to more accurate
 			util.SleepAtRandomTime()
 			// TODO log here
@@ -89,4 +93,39 @@ func SaveToFile(resp *http.Response, filePath string, finish func(savePath strin
 		util.LogFatal(filePath + " already exist")
 	}
 	finish(filePath)
+}
+
+// 监控网速
+func OverwatchNetworkSpeed(pathList []string, taskFinish model.SpeedWatchTaskFinishSignal) {
+	go func() {
+		var prevFileSize float64 = 0.0
+		for {
+			time.Sleep(time.Second / 2)
+			currentFileSize := 0.0
+			for _, val := range pathList {
+				s, _ := DirSize(val)
+				currentFileSize = currentFileSize + float64(s)/1000.0
+			}
+			increaseSize := currentFileSize - prevFileSize
+			increaseSize = increaseSize / 2
+			if increaseSize > 1000.0 {
+				util.LogP(fmt.Sprintf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  %f MB/s total: %f MB", increaseSize/1000.0, currentFileSize/1000.0))
+			} else {
+				util.LogP(fmt.Sprintf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  %f KB/s total: %f MB", increaseSize, currentFileSize/1000.0))
+			}
+			prevFileSize = currentFileSize
+		}
+	}()
+	<-taskFinish
+}
+
+func DirSize(path string) (int64, error) {
+	var size int64
+	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
+		if info != nil && !info.IsDir() {
+			size += info.Size()
+		}
+		return err
+	})
+	return size, err
 }

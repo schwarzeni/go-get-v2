@@ -19,6 +19,59 @@ func (TencentParser) BuildParser() model.Parser {
 	return TencentParser{}
 }
 
+func (t TencentParser) GetVideoListAndSavePathForChrome(videoInfo model.SingleVideoInJson) ([]model.Video, string) {
+	var videos []model.Video
+
+	apiu, _ := url.Parse(videoInfo.ApiUrl)
+	pageu, _ := url.Parse(videoInfo.WebpageUrl)
+	strs, e := t.ParsePlayFrameTxt(videoInfo.ApiUrl,
+		map[string]string{
+			"Cookie":     videoInfo.Cookie,
+			"Connection": "keep-alive",
+			"Host":       apiu.Host,
+			"Origin":     pageu.Scheme + "://" + pageu.Host,
+			"Referer":    pageu.String(),
+			"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"})
+	if e != nil {
+		util.LogFatal("some error in parse api list: " + e.Error())
+	}
+	vs := t.GenerateVideoModelsForChrome(strs, videoInfo)
+	videos = append(videos, vs...)
+
+	return videos, videoInfo.SavePath
+}
+
+func (t TencentParser) GenerateVideoModelsForChrome(urls []string, videoInfo model.SingleVideoInJson) []model.Video {
+	var videos []model.Video
+
+	apiStrUrl, e := url.Parse(videoInfo.ApiUrl)
+	if e != nil {
+		util.LogFatal("Error: in TencentParser.GenerateVideoModelsForChrome parse apiStrUrl : " + e.Error())
+	}
+	p := apiStrUrl.Path
+	result := strings.Split(p, "/")
+	realPath := ""
+	for i := 0; i < len(result)-1; i++ {
+		realPath = realPath + result[i] + "/"
+	}
+	apiStrUrl.RawQuery = ""
+	apiStrUrl.Path = realPath
+
+	for i, vu := range urls {
+		u := apiStrUrl.String() + vu
+		videos = append(videos, TencentVideo{
+			Url:      u,
+			Origin:   "https://v.qq.com",
+			Host:     apiStrUrl.Host,
+			Refer:    videoInfo.WebpageUrl,
+			Cookie:   videoInfo.Cookie,
+			SavePath: path.Join(videoInfo.SavePath, strconv.Itoa(i)+".ts")})
+	}
+	return videos
+}
+
+////////////////////// 以下为原方法 ///////////////////////////
+
 func (t TencentParser) GetVideoListAndSavePath() ([]model.Video, []string) {
 	info := util.ParseConfigFile()
 	num := len(info.Data)

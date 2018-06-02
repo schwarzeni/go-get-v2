@@ -39,6 +39,49 @@ func (BilibiliParser) BuildParser() model.Parser {
 	return parser
 }
 
+func (b BilibiliParser) GetVideoListAndSavePathForChrome(videoInfo model.SingleVideoInJson) ([]model.Video, string) {
+	var videos []model.Video
+
+	v, e := ParseJsonApi(videoInfo.ApiUrl,
+		map[string]string{
+			"Host":    "bangumi.bilibili.com",
+			"Origin":  "https://www.bilibili.com",
+			"Referer": videoInfo.WebpageUrl,
+			"Cookie":  videoInfo.Cookie})
+	if e != nil {
+		util.LogFatal("in GetVideoList " + e.Error())
+	}
+	vs := b.ConvertJsonToVideoModelsForChrome(v, videoInfo)
+	videos = append(videos, vs...)
+
+	return videos, videoInfo.SavePath
+}
+
+// 将json格式的视频信息转换为model
+func (b BilibiliParser) ConvertJsonToVideoModelsForChrome(vj VideoListJson, vinfo model.SingleVideoInJson) []model.Video {
+	var bs []model.Video
+	for i := 0; i < len(vj.Durl); i++ {
+		u, e := url.Parse(vj.Durl[i].Url)
+		if e != nil {
+			util.LogFatal("Error: in ConvertJsonToVideoModelsForChrome: " + e.Error())
+		}
+		u.Scheme = "https"
+		if b.IsUsePlugin {
+			u.RawQuery = strings.Replace(u.RawQuery, "platform=iphone", "platform=pc", -1)
+		}
+		bs = append(bs, BilibiliVideo{
+			Url:      u.String(),
+			Origin:   "https://www.bilibili.com",
+			Host:     u.Host,
+			Refer:    vinfo.WebpageUrl,
+			Cookie:   vinfo.Cookie,
+			SavePath: path.Join(vinfo.SavePath, strconv.Itoa(i)+".flv")})
+	}
+	return bs
+}
+
+////////////////////// 以下为原方法 ///////////////////////////
+
 // 获取视频列表
 func (b BilibiliParser) GetVideoListAndSavePath() ([]model.Video, []string) {
 	info := util.ParseConfigFile()
