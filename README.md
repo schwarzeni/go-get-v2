@@ -1,4 +1,4 @@
-# 配合 go-get-v2-chrome-plugin 对主流网站视频进行下载
+# 配合 go-get-v2-chrome-plugin 对中国主流网站视频进行下载
 
 读取Chrome插件[go-get-v2-chrome-plugin](https://github.com/schwarzeni/go-get-v2-chrome-plugin)生成对配置文件，对视频进行下载
 
@@ -12,7 +12,7 @@
 
 使用前先使用go对src/github.com/schwarzeni/go-get-v2进行编译，将bin目录加入到环境变量中
 
-需要ffmpeg安装并加入到环境变量中
+需要[ffmpeg](https://www.ffmpeg.org/download.html)安装并加入到环境变量中
 
 需要有bash环境，windows尤其请注意，可以使用git安装时自带的模拟终端
 
