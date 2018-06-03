@@ -22,8 +22,6 @@
 
 需要[ffmpeg](https://www.ffmpeg.org/download.html)安装并加入到环境变量中
 
-需要有bash环境，windows尤其请注意，可以使用git安装时自带的bash模拟终端，获取bash路径后bin中的concat_file.sh第一行进行修改
-
 ---
 
 ## 执行
