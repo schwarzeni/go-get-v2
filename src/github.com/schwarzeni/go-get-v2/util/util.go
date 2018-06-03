@@ -21,6 +21,12 @@ import (
 
 	"encoding/json"
 
+	"sort"
+	"strconv"
+	"strings"
+
+	"path/filepath"
+
 	"github.com/schwarzeni/go-get-v2/parser/model"
 )
 
@@ -53,36 +59,89 @@ func ConcatFiles(pathLists []string) {
 	for i := 0; i < num; i++ {
 		go func(dirpath string, wg *sync.WaitGroup) {
 			LogP("Concating files in dir " + dirpath + " ...")
-			cmd := exec.Command("concat_file.sh", dirpath)
+			WriteDataToFile(dirpath)
+			dirName := filepath.Base(dirpath)
+			cmd := exec.Command("ffmpeg", "-f", "concat", "-safe", "0", "-i", filepath.Join(dirpath, "ff.txt"), "-c", "copy", filepath.Join(filepath.Dir(dirpath), dirName)+".mp4")
+
 			err := cmd.Run()
 			if err != nil {
 				LogE("When concating dir: " + dirpath + ", " + err.Error())
 			} else {
 				LogP("Concat files in dir " + dirpath + " finish")
 			}
+
 			wg.Done()
 		}(pathLists[i], &wg)
 	}
 	wg.Wait()
+
+}
+
+func ClearWorkingDir(pathLists []string) {
+	num := len(pathLists)
+	for i := 0; i < num; i++ {
+		err := os.RemoveAll(pathLists[i])
+		if err != nil {
+			LogP("Error in delete folder: " + pathLists[i] + " " + err.Error())
+		}
+	}
 	LogP("Finish")
+}
+
+// 生成执行ffmpeg文件信息， -i 后面的内容
+func WriteDataToFile(dirPath string) {
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		LogFatal("In GenerateFfmpegCmdArgFilePathData: path: " + dirPath + err.Error())
+	}
+	fileType := strings.Split(files[0].Name(), ".")[1]
+	fileNameList := []int{}
+	for _, f := range files {
+		restult, _ := strconv.Atoi(strings.Split(f.Name(), ".")[0])
+		fileNameList = append(fileNameList, restult)
+	}
+	sort.Slice(fileNameList, func(i, j int) bool {
+		return fileNameList[i] < fileNameList[j]
+	})
+	f, err := os.Create(path.Join(dirPath, "ff.txt"))
+	if err != nil {
+		LogFatal("Error in GetFfmpegCmdArgFilePathData when create file " + err.Error())
+	}
+	for i := 0; i < len(fileNameList); i++ {
+		f.WriteString("file " + "'" + path.Join(dirPath, strconv.Itoa(fileNameList[i])+"."+fileType) + "'\n")
+	}
+	err = f.Sync()
+	if err != nil {
+		LogFatal("Error in GetFfmpegCmdArgFilePathData when save file " + err.Error())
+	}
 }
 
 // 检测一些环境配置
 func CheckEnv() {
-	// 检测环境是否有支持bash
-	LogP("Check if bash is available ...")
-	cmd := exec.Command("bash", "--version")
-	err := cmd.Run()
-	if err != nil {
-		LogFatal("Fatal error: " + err.Error() + "\n>> Tips: Please check if bash available")
-	} else {
-		LogP("OK")
-	}
+	//// 检测环境是否有支持bash
+	//LogP("Check if bash is available ...")
+	//cmd := exec.Command("bash", "--version")
+	//err := cmd.Run()
+	//if err != nil {
+	//	LogFatal("Fatal error: " + err.Error() + "\n>> Tips: Please check if bash available")
+	//} else {
+	//	LogP("OK")
+	//}
+	//
+	//LogP("Check if concat_file.sh is available ...")
+	//cmd = exec.Command("concat_file.sh")
+	//err = cmd.Run()
+	//if err != nil {
+	//	LogFatal("Fatal error: " + err.Error() + "\n>> Tips: Please check if concat_file.sh is in your pat:w" +
+	//		"h")
+	//} else {
+	//	LogP("OK")
+	//}
 
 	// 检测环境是否有ffmpeg
 	LogP("Check if env has ffmpeg ...")
-	cmd = exec.Command("ffmpeg", "--help")
-	err = cmd.Run()
+	cmd := exec.Command("ffmpeg", "--help")
+	err := cmd.Run()
 	if err != nil {
 		LogFatal("Fatal error: " + err.Error() + "\n>> Tips: Please check if ffmpeg is available in your command line environment")
 	} else {

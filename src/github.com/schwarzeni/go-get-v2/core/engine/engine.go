@@ -138,6 +138,9 @@ func RunForChrome() {
 
 	// 下载结束后链接文件
 	util.ConcatFiles(pathsList)
+
+	// 清除下载目录
+	util.ClearWorkingDir(pathsList)
 }
 
 func ReadUserConfig() UserConfigInfo {

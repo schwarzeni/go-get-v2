@@ -100,23 +100,28 @@ func OverwatchNetworkSpeed(pathList []string, taskFinish model.SpeedWatchTaskFin
 	go func() {
 		var prevFileSize float64 = 0.0
 		for {
-			time.Sleep(time.Second / 2)
-			currentFileSize := 0.0
-			for _, val := range pathList {
-				s, _ := DirSize(val)
-				currentFileSize = currentFileSize + float64(s)/1000.0
+			select {
+			case <-taskFinish:
+				return
+			default:
+				time.Sleep(time.Second / 2)
+				currentFileSize := 0.0
+				for _, val := range pathList {
+					s, _ := DirSize(val)
+					currentFileSize = currentFileSize + float64(s)/1000.0
+				}
+				increaseSize := currentFileSize - prevFileSize
+				increaseSize = increaseSize / 2
+				if increaseSize > 1000.0 {
+					util.LogP(fmt.Sprintf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  %f MB/s total: %f MB", increaseSize/1000.0, currentFileSize/1000.0))
+				} else {
+					util.LogP(fmt.Sprintf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  %f KB/s total: %f MB", increaseSize, currentFileSize/1000.0))
+				}
+				prevFileSize = currentFileSize
 			}
-			increaseSize := currentFileSize - prevFileSize
-			increaseSize = increaseSize / 2
-			if increaseSize > 1000.0 {
-				util.LogP(fmt.Sprintf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  %f MB/s total: %f MB", increaseSize/1000.0, currentFileSize/1000.0))
-			} else {
-				util.LogP(fmt.Sprintf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  %f KB/s total: %f MB", increaseSize, currentFileSize/1000.0))
-			}
-			prevFileSize = currentFileSize
 		}
 	}()
-	<-taskFinish
+	//<-taskFinish
 }
 
 func DirSize(path string) (int64, error) {
