@@ -1,4 +1,4 @@
-# 配合 go-get-v2-chrome-plugin 对中国主流网站视频进行下载
+# 配合 go-get-v2-chrome-plugin 对中国主流网站视频进行下载（已不再维护）
 
 读取Chrome插件[go-get-v2-chrome-plugin](https://github.com/schwarzeni/go-get-v2-chrome-plugin)生成对配置文件，对视频进行下载
 
